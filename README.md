@@ -79,5 +79,6 @@ output:
 
 ## Limitations of these approach are
 
-we have to give the input file with a min of 5 to 6 paragraphs then only we can compresses the file if we give below that then we will definitely more size of the given file which is a big set back for this approach.
+we have to give the input file with a min of 5 to 6 paragraphs then only we can compresses the file.
+If we give below that then we will definitely get more size of the given file which is a big set back for this approach.
 
