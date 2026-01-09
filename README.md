@@ -1,11 +1,11 @@
-\# Huffman Encoding and Decoding
+# Huffman Encoding and Decoding
 
 
 
-\## Overview
-This project implements \*\*Huffman Coding\*\*, a greedy algorithm used for
+## Overview
+This project implements **Huffman Coding**, a greedy algorithm used for
 
-\*\*lossless data compression\*\*. The algorithm assigns variable-length
+**lossless data compression**. The algorithm assigns variable-length
 
 prefix codes to characters based on their frequencies, reducing the
 
@@ -13,57 +13,57 @@ overall size of the encoded data.
 
 
 
-\## Features
+## Features
 
-\- Calculates frequency of characters from input text
+  Calculates frequency of characters from input text
 
-\- Constructs Huffman Tree using a priority queue (min-heap)
+  Constructs Huffman Tree using a priority queue (min-heap)
 
-\- Generates optimal prefix codes for characters
+  Generates optimal prefix codes for characters
 
-\- Encodes input text into compressed binary form
+  Encodes input text into compressed binary form
 
-\- Decodes compressed data back to the original text
+  Decodes compressed data back to the original text
 
-\- Displays compression statistics
-
-
+  Displays compression statistics
 
 
 
-\## Technologies Used
-
-\- Python
-
-\- Data Structures: Tree, Heap (Priority Queue)
-
-\- Algorithms: Greedy Algorithm
-
-\- File Handling
 
 
+## Technologies Used
 
-\## How It Works
+  Python
 
-1\. Count character frequencies from the input file
+  Data Structures: Tree, Heap (Priority Queue)
 
-2\. Build the Huffman Tree using a min-heap
+  Algorithms: Greedy Algorithm
 
-3\. Generate binary codes by traversing the tree
-
-4\. Encode the input text using generated codes
-
-5\. Decode the encoded data to verify correctness
+  File Handling
 
 
 
-\## How to Run
+## How It Works
 
-* run it on command line arguments
-* python filename.py encode input.txt output.huff
-* python filename.py decode output.huff out.txt
-* By encode we will generate the compressed bits for the characters and store them in the output.huff file which will be created automatically
-* for decoding the output.huff file we will decode it by running the respective command on terminal with out.txt file which will be created.
+  Count character frequencies from the input file
+
+  Build the Huffman Tree using a min-heap
+
+  Generate binary codes by traversing the tree
+
+  Encode the input text using generated codes
+
+  Decode the encoded data to verify correctness
+
+
+
+## How to Run
+
+ run it on command line arguments
+ python filename.py encode input.txt output.huff
+ python filename.py decode output.huff out.txt
+ By encode we will generate the compressed bits for the characters and store them in the output.huff file which will be created automatically
+ for decoding the output.huff file we will decode it by running the respective command on terminal with out.txt file which will be created.
 
 
 
@@ -79,5 +79,5 @@ output:
 
 Limitations of these approach are
 
- we have to give the input file with a min of 5 to 6 paragraphs then only we can compresses the file if we give below that then we will definitely more size of the given file which is a big set back for this approach.
+we have to give the input file with a min of 5 to 6 paragraphs then only we can compresses the file if we give below that then we will definitely more size of the given file which is a big set back for this approach.
 
