@@ -77,7 +77,7 @@ output:
 
  	after run we will get a compressed file
 
-Limitations of these approach are
+## Limitations of these approach are
 
 we have to give the input file with a min of 5 to 6 paragraphs then only we can compresses the file if we give below that then we will definitely more size of the given file which is a big set back for this approach.
 
