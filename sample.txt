@@ -1,0 +1,148 @@
+graphical ancestry. However, they have not been systematically compared to classifiers widely used in other 
+disciplines. Noting that genetic data have a tabular form, this study addresses this gap by benchmarking 
+forensic classifiers against TabPFN, a cutting-edge, general-purpose machine learning classifier for tabular 
+data. The comparison evaluates performance using metrics such as accuracy – the proportion of correct 
+classifications – and ROC AUC. We examine classification tasks for individuals at both the intracontinental 
+and continental levels, based on a published dataset for training and testing. Our results reveal significant 
+performance differences between methods, with TabPFN consistently achieving the best results for accuracy, 
+ROC AUC and log loss. E.g., for accuracy, TabPFN improves SNIPPER from 84% to 93% on a continental scale 
+using eight populations, and from 43% to 48% for inter-European classification with ten populations.
+1. Introduction
+Classification of individuals into ancestral populations, i.e., inferring 
+biogeographical ancestry (BGA) from DNA traces, is a fundamental task 
+in forensic science [1]. This process is particularly useful for identi
+fying disaster victims [2] and in broader forensic investigations [3]. 
+Additional applications include detecting population stratification [4
+6]. Researchers commonly classify individuals into several continental 
+populations such as Africa, Europe, East Asia, South Asia, Admixed 
+Americans, and Oceania [7,8], or on an intracontinental level.
+The statistical task of classification can be broken down into two 
+steps. First, genetic markers have to be chosen which are able to dis
+tinguish between populations, i.e. with frequency differentials between 
+populations. Second, these Ancestry Informative Markers (or AIMs) 
+are used as features in a classification task. Here, various algorithms 
+are used, leveraging genetic distance, regression, or Bayesian infer
+ence [7]. Tools like the naive Bayes classifier Snipper [9] have been used 
+alongside multinomial logistic regression [10] and the Genetic Distance 
+Algorithm [11]. Furthermore, the Admixture Model, as implemented 
+in tools like Structure [12] or Admixture [13], is widely used for 
+classification [7]. More recently, other machine learning methods such 
+as XGBoost [14–16], Partial Least Squares-Discriminant Analysis (PLS
+DA) [14], and random forests [16–18] have been applied in forensic 
+genetics to ancestry prediction.
+Several challenges must be taken into account for BGA. First, classi
+fication becomes increasingly challenging for more genetically similar 
+∗ Corresponding author.
+E-mail address: carola.heinzel@stochastik.uni-freiburg.de (C.S. Heinzel).
+https://doi.org/10.1016/j.fsigen.2025.103290
+populations, which are frequently found within continents. Second, 
+admixed individuals, such as Americans, present difficulties in classi
+fication [19,20]. Third, marker selection significantly affects classifica
+tion quality [7], with ideal markers showing large differences in allele 
+frequencies between populations [21]. Fourth, selecting populations as 
+classes must lead to results which are both, reliable and helpful in 
+further investigations.
+The choice of Ancestry Informative Markers (AIMs) is frequently 
+performed by finding alleles with large frequency differentials be
+tween populations using expert knowledge [9,22,23]. However, fea
+ture selection for classification is also a well-known task in machine 
+learning, which has been applied to the choice of AIMs [24,25]. The 
+goal is to find a set which leads to a reduced sequencing effort, 
+focusing on 50–200 informative markers (relative to the classes un
+der study) instead of thousands [26]. However, Heinzel et al. [27] 
+showed that marker quality criteria extend beyond allele frequency 
+differences. Additionally, forensic contexts often face challenges with 
+missing data [7].
+Cheung et al. [7] compared several classification approaches, in
+cluding Snipper [9], multinomial logistic regression [10], and the Ge
+netic Distance Algorithm [11]. They also analyzed the Admixture 
+Model, concluding that ‘‘STRUCTURE was the most accurate classifier 
+for both complete and partial genotypes in non-admixed individuals across 
+four reference populations, including populations with suspected admixture’’.
+Received 31 January 2025; Received in revised form 26 March 2025; Accepted 28 April 2025
+Available online 13 June 2025 
+1872-4973/© 2025 The Authors. Published by Elsevier B.V. This is an open access article under the CC BY license ( http://creativecommons.org/licenses/by/4.0/ ). 
+C.S. Heinzel et al.
+Forensic Science International: Genetics 79 (2025) 103290 
+Fig. 1. (A) Overview of the number of individuals per population in case (1), i.e. for continental classification. In this case, there are a total of 4342 individuals. (B) Overview 
+of the number of individuals per population for case (2), i.e. intra-European classification. In this case, there are a total of 635 individuals. Total sample sizes for all populations 
+can be found in Tables S1 and S2 in the Supplement.
+This study is complemented by a comparison to XGboost and PLS-DA 
+in [14], who conclude that such machine learning tools have a higher 
+accuracy when compared to the above methods. We complement this 
+study by using TabPFN, a new foundational model which was shown to 
+outperform existing models for tabular data [28].
+Ideally, a classifier predicts the population of every individual with 
+100% ancestry of one population correctly with prediction probability 
+1. Additionally, according to Cheung et al. [7], for admixed individuals 
+the prediction probability should be equal to the ancestry proportions 
+of the genome. Several measures of non-optimal classifiers, such as the 
+misclassification rate, the logloss (sum of logs of misclassification prob
+abilities), accuracy (fraction of correctly classified samples), the ROC 
+AUC (the area under a curve of false positives against true positives) 
+are among the most common statistics.
+Machine learning has already seen applications in forensic science, 
+including haplogroup prediction from Y-STR data [29], estimation of 
+the number of contributors to a trace [30], and prediction of the age 
+or post-mortem interval [31]. While machine learning methods have 
+been employed to predict physical appearance from DNA [32] as well 
+as BGA [24], the application of such methods have been criticized for 
+their lack of fit to the specific needs in the forensic field [31]. Our work 
+aims to address this gap by applying state-of-the-art machine learning 
+techniques to the BGA classification problem.
+2. Material and methods
+2.1. Choice of the data and the marker set
+There are different widely used marker sets in forensic genet
+ics, (e.g. 9,22,23,33). Throughout our study, we adopt the dataset 
+from [23] (their Supplementary Table S1 A), which uses the markers 
+from the VISAGE Enhanced tool [33].  On the one hand, the choice of 
+the markers influences the output of the classifiers. On the other hand, 
+‘‘most of the BGA SNPs [in the VISAGE Enhanced Tool] are already 
+well established for forensic use’’ [23]. So, we choose the VISAGE 
+Enhanced tool, since this is the latest widely used marker set for 
+ancestry prediction. This set of markers has 104 autosomal markers, 29 
+of which are multiallelic. This data set consists of 2504 individuals from 
+the 1000 genomes project [34], 929 HGDP-CEPH samples [35,36], 137 
+samples from the Middle East [37], 130 samples from the SGDP [38], 
+and 402 samples from the Estonian Biocentre human genome diversity 
+panel [39].
+We consider two cases:
+(1) Continental level combining ‘AFRICAN’, ‘EAST AFRICAN’ and
+‘ADMIXED AFRICAN’ to Africa (AFR), combining ‘MIDDLE EAST’
+and ‘(SANGER) MIDDLE EAST’ to Middle East (ME), combining
+‘EUROPEAN’ and ‘ROMA’ to Europe (EUR), East Asia (EAS), 
+South-East Asia (SAS), Oceania (OCE), ‘CENTRAL ASIAN’ (CAS),
+‘NORTH AFRICAN’ (NAF) and combining ‘ADMIXED AMERICAN’
+and ‘AMERICAN’ to Admixed America (AMR). This makes a total 
+of nine classes.
+(2) Intra-European level, only considering the EUR classes from above 
+with more than 20 individuals, using (CEPH) with N & W Eu
+ropean ancestry’ (CEU), ‘Finnish in Finland’ (FIN), ‘Toscani in 
+Italia’ (TSI), ‘Italy - Sardinian’ (SAR), ‘British in England and 
+Scotland’ (GBR), ‘Iberian population in Spain’ (IBS), ‘Toscani in 
+Italia’, ‘Russia - Russian’ (RUS), ‘France - French Basque’ (BAS),
+‘France - French’ (FRA), and ‘Turkey’ (TUR) as classes. These are 
+a total of ten classes. We did not combine BAS and FRA as [40] 
+mentioned that there are big differences between basques and 
+people from France. Similarly, we considered TSI and SAR as 
+different populations as there genetic distance is significant [41].
+The number of individuals is shown for both cases in Fig.  1, where we 
+see that some classes are under-represented in the dataset. 
+2.2. Classification
+For classification, we compare the following methods: (i) Snipper, 
+which is a version of a naive Bayes classifier [42]; (ii) the Admixture 
+Model (AM) (in its supervised setting), which assumes that every allele 
+in individual 𝑖 has a chance of 𝑞𝑖𝑘
+ to come from population 𝑘 [12,13], 
+and individual 𝑖 is classified into population 𝑘 if 𝑞𝑖𝑘
+ is maximal; (iii) 
+PLS-DA which has already been used by [14] in the forensic context; 
+and (iv) TabPFN, a novel foundational model for tabular data (such as 
+genetic data) based on a neural network [28], (v) XGBoost  [43] and 
+(vi) Random Forest [44]. Note that the model-based methods (i) and (ii) 
+treat markers as independent, while the machine-learning (black-box) 
+methods (iii), (iv), (v) and (vi) incorporate joint segregation of markers.
+Other classifiers, such as gradient-boosted decision trees [43,45,46], 
+or logistic regression [47], would as well be applicable to genetic 
+(i.e., tabular) data. However, Hollmann et al. [28] have shown that 
+TabPFN dominantly outperforms other classifiers, including those men
